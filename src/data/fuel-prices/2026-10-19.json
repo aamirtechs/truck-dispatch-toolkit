@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-19",
+  "publishedDate": "2026-10-20",
+  "source": "U.S. Energy Information Administration",
+  "sourceUrl": "https://www.eia.gov/dnav/pet/PET_PRI_GND_A_EPD2D_PTE_DPGAL_W.htm",
+  "description": "Historical weekly retail on-highway diesel prices. This snapshot is not live pricing.",
+  "unit": "USD per gallon",
+  "prices": {
+    "California": 8.242
+  }
+}

@@ -1,3 +1,11 @@
+## Unreleased
+
+### Added
+- Add dated historical fuel price snapshots and state-level price lookup helpers.
+- Allow `planFuel` and `priceCompare` to use prices from a selected state and snapshot date.
+
+### Tests
+- Add tests for snapshot loading, missing snapshots, state price lookup, and fuel price integration.
 # Changelog
 
 All notable changes to truck-dispatch-toolkit are recorded here.

@@ -424,7 +424,68 @@ test('broker: quickPayMath annualizes the fee', () => {
 });
 
 // ---------- fuel ----------
-const { planFuel, priceCompare } = toolkit;
+const {
+  planFuel,
+  priceCompare,
+  loadFuelPrices,
+  fuelPriceForState,
+} = toolkit;
+
+test('fuel prices: loads a known historical snapshot', () => {
+  const snapshot = loadFuelPrices('2026-10-19');
+
+  assert.strictEqual(snapshot.date, '2026-10-19');
+  assert.strictEqual(snapshot.unit, 'USD per gallon');
+  assert.strictEqual(typeof snapshot.prices, 'object');
+});
+
+test('fuel prices: throws a clear error for a missing snapshot', () => {
+  assert.throws(
+    () => loadFuelPrices('1900-01-01'),
+    /Fuel price snapshot not found: 1900-01-01/
+  );
+});
+
+test('fuel prices: state price can be used by priceCompare', () => {
+  test('fuel prices: priceCompare accepts a state and snapshot date', () => {
+  const result = priceCompare({
+    gallons: 10,
+    options: [
+      {
+        name: 'California',
+        fuelState: 'California',
+        fuelPriceDate: '2026-10-19',
+      },
+    ],
+  });
+
+  assert.strictEqual(result[0].pricePerGallon, 8.242);
+  assert.strictEqual(result[0].totalCost, 82.42);
+});
+  test('fuel prices: planFuel accepts a state and snapshot date', () => {
+  const result = planFuel({
+    totalMiles: 100,
+    mpg: 10,
+    tankCapacityGallons: 50,
+    startingGallons: 20,
+    fuelState: 'California',
+    fuelPriceDate: '2026-10-19',
+  });
+
+  assert.strictEqual(result.burnCost, 82.42);
+});
+  const price = fuelPriceForState('California', '2026-10-19');
+
+  const result = priceCompare({
+    gallons: 10,
+    options: [
+      { name: 'California', pricePerGallon: price },
+    ],
+  });
+
+  assert.strictEqual(result[0].pricePerGallon, price);
+  assert.strictEqual(result[0].totalCost, 82.42);
+});
 
 test('fuel: 1100 miles at 6.5 mpg burns 169.23 gallons', () => {
   // gallons = 1100 / 6.5 = 169.2307; buy = 169.2307 + 15 reserve - 50 in tank = 134.23
@@ -602,7 +663,8 @@ test('index: new modules re-exported, namespaced and flat', () => {
   }
   for (const fn of ['createLaneBook', 'addLoad', 'laneStats', 'rateGuard', 'equipmentBreakdown',
     'laneBookToJSON', 'laneBookFromJSON', 'scoreBroker', 'quickPayMath',
-    'planFuel', 'priceCompare', 'planCheckCalls', 'formatSchedule',
+   'planFuel', 'priceCompare', 'loadFuelPrices', 'fuelPriceForState',
+'planCheckCalls', 'formatSchedule',
     'layoverCharge', 'tonuCharge', 'combinedClaimLetter']) {
     assert.strictEqual(typeof toolkit[fn], 'function', fn + ' should be exported');
   }
