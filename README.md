@@ -1,5 +1,11 @@
 # truck-dispatch-toolkit
 
+![Stars](https://img.shields.io/github/stars/aamirtechs/truck-dispatch-toolkit?style=flat&color=C9A227)
+![Forks](https://img.shields.io/github/forks/aamirtechs/truck-dispatch-toolkit?style=flat&color=0D1F3C)
+![Issues](https://img.shields.io/github/issues/aamirtechs/truck-dispatch-toolkit?style=flat)
+![Zero dependencies](https://img.shields.io/badge/Dependencies-0-1DBF73?style=flat)
+![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat)
+
 The math a U.S. truck dispatcher or owner-operator runs every day,
 in one zero-dependency JavaScript library and CLI: true rate per mile,
 load profit, hours-of-service feasibility, detention claims, IFTA
