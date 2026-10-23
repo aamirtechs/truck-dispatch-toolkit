@@ -1,4 +1,6 @@
 # truck-dispatch-toolkit
+Live page: https://aamirtechs.github.io/truck-dispatch-toolkit/
+Use it in your browser: the Pages site above runs the full tool locally, no install needed.
 
 ![Stars](https://img.shields.io/github/stars/aamirtechs/truck-dispatch-toolkit?style=flat&color=C9A227)
 ![Forks](https://img.shields.io/github/forks/aamirtechs/truck-dispatch-toolkit?style=flat&color=0D1F3C)

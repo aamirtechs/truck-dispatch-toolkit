@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>truck-dispatch-toolkit: dispatch calculators in your browser</title>
+<meta name="description" content="The math a U.S. truck dispatcher or owner-operator runs every day: true rate per mile, load profit, detention, IFTA fuel tax estimates and trip fuel planning. Runs fully in your browser.">
+<meta name="keywords" content="truck dispatch, owner operator, rate per mile, load profit, detention calculator, ifta calculator, fuel planner, trucking">
+<meta name="author" content="Amir Hussain">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://aamirtechs.github.io/truck-dispatch-toolkit/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0b1f3a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="truck-dispatch-toolkit: dispatch calculators in your browser">
+<meta property="og:description" content="True rate per mile, load profit, detention, IFTA estimates and fuel planning, computed locally in your browser. No accounts, no API keys.">
+<meta property="og:url" content="https://aamirtechs.github.io/truck-dispatch-toolkit/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="truck-dispatch-toolkit: dispatch calculators">
+<meta name="twitter:description" content="The daily math for dispatchers and owner-operators, in one free browser page.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "truck-dispatch-toolkit",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Cross-platform",
+  "url": "https://aamirtechs.github.io/truck-dispatch-toolkit/",
+  "description": "Calculation library and CLI for U.S. truck dispatchers and owner-operators: true rate per mile, load profit, detention claims, IFTA fuel tax estimates and trip fuel planning.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Amir Hussain",
+    "url": "https://aamirtechs.com"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --navy2:#123058; --gold:#d4a72c; --gold2:#e9c767;
+  --ink:#1c2434; --muted:#5a6478; --bg:#f4f6fa; --card:#ffffff; --line:#e2e7f0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);line-height:1.65}
+h1,h2,h3{font-family:'Sora',system-ui,sans-serif;line-height:1.25}
+.hero{background:linear-gradient(140deg,var(--navy) 0%,var(--navy2) 70%,#1a4479 100%);color:#fff;padding:76px 20px 64px;text-align:center;border-bottom:4px solid var(--gold)}
+.hero .tag{display:inline-block;border:1px solid var(--gold);color:var(--gold2);border-radius:999px;padding:5px 16px;font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px}
+.hero h1{font-size:46px;font-weight:700;letter-spacing:-.01em;margin-bottom:16px}
+.hero p{max-width:740px;margin:0 auto 30px;color:#d9e1f2;font-size:18.5px}
+.btn{display:inline-block;background:var(--gold);color:#171106;font-weight:700;text-decoration:none;padding:13px 28px;border-radius:9px;font-size:16px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.btn:hover{background:var(--gold2)}
+.wrap{max-width:920px;margin:0 auto;padding:44px 20px 10px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:30px 32px;margin-bottom:26px;box-shadow:0 2px 10px rgba(11,31,58,.05)}
+section h2{font-size:22px;color:var(--navy);margin-bottom:16px}
+section h2::after{content:"";display:block;width:52px;height:3px;background:var(--gold);border-radius:2px;margin-top:7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:#fbfcfe;font-size:15.5px}
+.card::before{content:"";display:block;width:26px;height:3px;background:var(--gold);border-radius:2px;margin-bottom:9px}
+pre{background:var(--navy);color:#edf1f9;border-radius:10px;padding:19px 21px;overflow-x:auto;font-size:13.5px;line-height:1.6;margin:14px 0;box-shadow:inset 0 0 0 1px rgba(212,167,44,.35)}
+code{font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace}
+p.note{color:var(--muted);font-size:15.5px}
+footer{background:var(--navy);color:#cdd8ee;text-align:center;padding:40px 20px 44px;margin-top:20px;border-top:4px solid var(--gold)}
+footer p{margin-bottom:10px}
+footer a{color:var(--gold2);text-decoration:none;font-weight:600}
+footer a:hover{text-decoration:underline}
+footer .links a{margin:0 10px}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px}
+.field input[type="text"],.field input[type="number"]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff}
+.field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff}
+.field textarea{width:100%;min-height:96px;padding:12px 14px;border:1px solid var(--line);border-radius:9px;font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace;font-size:13.5px;line-height:1.55;background:#fbfcfe}
+.hint{color:var(--muted);font-size:.83rem;margin-top:5px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tabs button{background:#eef2f8;color:var(--navy);border:1px solid var(--line);font:inherit;font-weight:600;padding:9px 16px;border-radius:999px;cursor:pointer}
+.tabs button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+button.go{background:var(--gold);color:#231a00;border:0;font:inherit;font-weight:700;padding:13px 26px;border-radius:10px;cursor:pointer;width:100%;font-size:1.02rem;margin-top:4px}
+button.go:hover{filter:brightness(1.06)}
+.calc-result{margin-top:18px}
+.calc-result .err{color:#b3261e;font-weight:600}
+table{border-collapse:collapse;width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line);font-size:.92rem;vertical-align:top}
+th{background:var(--navy);color:#fff}
+td.v{font-weight:600;text-align:right;white-space:nowrap}
+.hidden{display:none}
+@media (max-width:680px){
+  .hero h1{font-size:33px}
+  .hero p{font-size:16.5px}
+  section{padding:24px 20px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <span class="tag">Free open source tool</span>
+  <h1>truck-dispatch-toolkit</h1>
+  <p>The math a U.S. truck dispatcher or owner-operator runs every day: true rate per mile, load profit, detention claims, IFTA fuel tax estimates, and trip fuel planning.</p>
+  <a class="btn" href="https://github.com/aamirtechs/truck-dispatch-toolkit">View source on GitHub</a>
+  <p style="margin-top:22px;font-size:15px;color:#f3d98a">Runs fully in your browser, files never leave your device. There is nothing to upload: just type your numbers.</p>
+</header>
+<main class="wrap">
+  <section>
+    <h2>Calculators</h2>
+    <div class="field">
+      <label for="calcSel">Choose a calculator</label>
+      <select id="calcSel">
+        <option value="rate" selected>True rate and break-even</option>
+        <option value="profit">Load profit</option>
+        <option value="detention">Detention calculator</option>
+        <option value="ifta">IFTA estimate</option>
+        <option value="fuel">Fuel planner</option>
+      </select>
+    </div>
+    <div class="tabs" id="tabs">
+      <button type="button" data-calc="rate" class="active">True rate</button>
+      <button type="button" data-calc="profit">Load profit</button>
+      <button type="button" data-calc="detention">Detention</button>
+      <button type="button" data-calc="ifta">IFTA</button>
+      <button type="button" data-calc="fuel">Fuel plan</button>
+    </div>
+
+    <div class="calc" id="calc-rate">
+      <div class="grid">
+        <div class="field"><label for="r-linehaul">Linehaul ($)</label><input type="number" id="r-linehaul" value="2400" step="any"></div>
+        <div class="field"><label for="r-accessorials">Accessorials ($)</label><input type="number" id="r-accessorials" value="0" step="any"></div>
+        <div class="field"><label for="r-loaded">Loaded miles</label><input type="number" id="r-loaded" value="800" step="any"></div>
+        <div class="field"><label for="r-deadhead">Deadhead miles</label><input type="number" id="r-deadhead" value="100" step="any"></div>
+        <div class="field"><label for="r-cpm">Your cost per mile ($)</label><input type="number" id="r-cpm" value="2.10" step="any"></div>
+        <div class="field"><label for="r-margin">Target margin (%)</label><input type="number" id="r-margin" value="10" step="any"></div>
+      </div>
+      <button class="go" type="button" data-run="rate">Calculate true rate</button>
+      <div class="calc-result" id="res-rate"></div>
+    </div>
+
+    <div class="calc hidden" id="calc-profit">
+      <div class="grid">
+        <div class="field"><label for="p-linehaul">Linehaul ($)</label><input type="number" id="p-linehaul" value="3000" step="any"></div>
+        <div class="field"><label for="p-detention">Detention pay ($)</label><input type="number" id="p-detention" value="150" step="any"></div>
+        <div class="field"><label for="p-layover">Layover pay ($)</label><input type="number" id="p-layover" value="0" step="any"></div>
+        <div class="field"><label for="p-tonu">TONU pay ($)</label><input type="number" id="p-tonu" value="0" step="any"></div>
+        <div class="field"><label for="p-lumperRe">Lumper reimbursed ($)</label><input type="number" id="p-lumperRe" value="75" step="any"></div>
+        <div class="field"><label for="p-loaded">Loaded miles</label><input type="number" id="p-loaded" value="1000" step="any"></div>
+        <div class="field"><label for="p-deadhead">Deadhead miles</label><input type="number" id="p-deadhead" value="120" step="any"></div>
+        <div class="field"><label for="p-mpg">MPG</label><input type="number" id="p-mpg" value="6.5" step="any"></div>
+        <div class="field"><label for="p-fuelPrice">Fuel price per gallon ($)</label><input type="number" id="p-fuelPrice" value="3.80" step="any"></div>
+        <div class="field"><label for="p-factoring">Factoring (%)</label><input type="number" id="p-factoring" value="3" step="any"></div>
+        <div class="field"><label for="p-tolls">Tolls ($)</label><input type="number" id="p-tolls" value="45" step="any"></div>
+        <div class="field"><label for="p-driverPct">Driver pay (% of linehaul)</label><input type="number" id="p-driverPct" value="25" step="any"></div>
+        <div class="field"><label for="p-driverMile">Driver pay per mile ($, used if % is 0)</label><input type="number" id="p-driverMile" value="0" step="any"></div>
+        <div class="field"><label for="p-lumperCost">Lumper cost ($)</label><input type="number" id="p-lumperCost" value="75" step="any"></div>
+      </div>
+      <button class="go" type="button" data-run="profit">Calculate load profit</button>
+      <div class="calc-result" id="res-profit"></div>
+    </div>
+
+    <div class="calc hidden" id="calc-detention">
+      <div class="grid">
+        <div class="field"><label for="d-arrival">Arrival (ISO, UTC)</label><input type="text" id="d-arrival" value="2026-10-01T08:00:00Z"></div>
+        <div class="field"><label for="d-departure">Departure (ISO, UTC)</label><input type="text" id="d-departure" value="2026-10-01T12:10:00Z"></div>
+        <div class="field"><label for="d-free">Free time (hours)</label><input type="number" id="d-free" value="2" step="any"></div>
+        <div class="field"><label for="d-rate">Rate per hour ($)</label><input type="number" id="d-rate" value="65" step="any"></div>
+        <div class="field"><label for="d-grace">Grace period (minutes)</label><input type="number" id="d-grace" value="0" step="any"></div>
+        <div class="field"><label for="d-increment">Billing increment (minutes)</label><input type="number" id="d-increment" value="15" step="any"></div>
+      </div>
+      <button class="go" type="button" data-run="detention">Calculate detention</button>
+      <div class="calc-result" id="res-detention"></div>
+    </div>
+
+    <div class="calc hidden" id="calc-ifta">
+      <div class="field">
+        <label for="i-miles">Miles by state (one per line: STATE miles)</label>
+        <textarea id="i-miles" spellcheck="false">TX 500
+OK 200
+NM 150</textarea>
+        <div class="hint">Uses the built-in approximate 2025 rate table from the library. An estimate for lane costing, not a tax filing. Verify current rates before filing.</div>
+      </div>
+      <div class="field"><label for="i-mpg">Fleet MPG</label><input type="number" id="i-mpg" value="6.5" step="any"></div>
+      <button class="go" type="button" data-run="ifta">Estimate IFTA tax</button>
+      <div class="calc-result" id="res-ifta"></div>
+    </div>
+
+    <div class="calc hidden" id="calc-fuel">
+      <div class="grid">
+        <div class="field"><label for="f-miles">Total miles</label><input type="number" id="f-miles" value="1800" step="any"></div>
+        <div class="field"><label for="f-mpg">MPG</label><input type="number" id="f-mpg" value="6.5" step="any"></div>
+        <div class="field"><label for="f-tank">Tank capacity (gallons)</label><input type="number" id="f-tank" value="120" step="any"></div>
+        <div class="field"><label for="f-start">Starting fuel (gallons)</label><input type="number" id="f-start" value="40" step="any"></div>
+        <div class="field"><label for="f-price">Fuel price per gallon ($)</label><input type="number" id="f-price" value="3.90" step="any"></div>
+        <div class="field"><label for="f-reserve">Reserve to keep (gallons)</label><input type="number" id="f-reserve" value="15" step="any"></div>
+      </div>
+      <button class="go" type="button" data-run="fuel">Plan fuel</button>
+      <div class="calc-result" id="res-fuel"></div>
+    </div>
+  </section>
+  <section>
+    <h2>The full toolkit</h2>
+    <div class="grid">
+      <div class="card">True rate: loaded rate lies, this prices every mile including deadhead and grades it against your break-even</div>
+      <div class="card">Load profit: gross minus fuel, factoring, driver pay, tolls and lumper, with margin and profit per mile</div>
+      <div class="card">Hours of service: an 11, 14 and 70 hour feasibility check for a planned trip (estimate, not legal advice)</div>
+      <div class="card">Detention: dwell minus free time and grace, rounded up to your billing increment, plus a claim letter in the CLI</div>
+      <div class="card">IFTA: gallons and tax owed per state from miles and MPG, with your own rate table in the library</div>
+      <div class="card">Lane book, broker scorecard, fuel planning, check-call schedules and accessorials round out the CLI and library</div>
+    </div>
+  </section>
+  <section>
+    <h2>Prefer the command line?</h2>
+    <p class="note">Zero dependencies, Node.js 18 or newer. This page runs the same library code the CLI uses.</p>
+    <pre><code>git clone https://github.com/aamirtechs/truck-dispatch-toolkit.git
+cd truck-dispatch-toolkit
+node bin/cli.js rate --linehaul 2400 --loaded-miles 800 --deadhead-miles 100 --cost-per-mile 2.10
+node bin/cli.js profit --linehaul 3000 --loaded-miles 1000 --mpg 6.5 --fuel-price 3.80</code></pre>
+    <p class="note">Hours-of-service and IFTA outputs are planning estimates, not legal or tax advice.</p>
+  </section>
+</main>
+<footer>
+  <p>Built by Amir Hussain, operations manager and founder of AamirTechs. Toolkit by Dispatch Authority.</p>
+  <p class="links"><a href="https://aamirtechs.com">AamirTechs: operations, customer support and e-commerce services</a> <a href="https://github.com/aamirtechs">More open source tools</a></p>
+</footer>
+<script src="app.js"></script>
+<script>
+(function () {
+  var T = window.TruckToolkit;
+  function num(id) { return Number(document.getElementById(id).value); }
+  function money(v) { return '$' + Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function table(rows) {
+    var html = '<table><tbody>';
+    rows.forEach(function (r) { html += '<tr><td>' + r[0] + '</td><td class="v">' + r[1] + '</td></tr>'; });
+    return html + '</tbody></table>';
+  }
+  function show(id, fn) {
+    var box = document.getElementById(id);
+    try { box.innerHTML = fn(); }
+    catch (e) { box.innerHTML = '<p class="err">' + e.message + '</p>'; }
+  }
+  function showCalc(name) {
+    ['rate', 'profit', 'detention', 'ifta', 'fuel'].forEach(function (n) {
+      document.getElementById('calc-' + n).classList.toggle('hidden', n !== name);
+    });
+    document.getElementById('calcSel').value = name;
+    document.querySelectorAll('#tabs button').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-calc') === name);
+    });
+  }
+  document.getElementById('calcSel').addEventListener('change', function () { showCalc(this.value); });
+  document.querySelectorAll('#tabs button').forEach(function (b) {
+    b.addEventListener('click', function () { showCalc(b.getAttribute('data-calc')); });
+  });
+  var runners = {
+    rate: function () {
+      var r = T.trueRate({ linehaul: num('r-linehaul'), accessorials: num('r-accessorials'), loadedMiles: num('r-loaded'), deadheadMiles: num('r-deadhead') });
+      var be = T.breakEven({ costPerMile: num('r-cpm'), targetMarginPercent: num('r-margin') });
+      var v = T.rateVerdict({ rpmAllMiles: r.rpmAllMiles, breakEvenRpm: be });
+      return table([
+        ['Revenue', money(r.revenue)],
+        ['Miles', r.loadedMiles + ' loaded + ' + r.deadheadMiles + ' deadhead = ' + r.totalMiles],
+        ['Rate (loaded)', money(r.rpmLoaded) + ' per mile'],
+        ['Rate (all miles)', money(r.rpmAllMiles) + ' per mile'],
+        ['Deadhead', r.deadheadPercent + '%'],
+        ['Break-even (cost + margin)', money(be) + ' per mile'],
+        ['Verdict', v.verdict + ' (' + v.spreadPercent + '% vs break-even)']
+      ]);
+    },
+    profit: function () {
+      var p = T.loadProfit({
+        linehaul: num('p-linehaul'), detentionPay: num('p-detention'), layoverPay: num('p-layover'),
+        tonuPay: num('p-tonu'), lumperReimbursed: num('p-lumperRe'),
+        loadedMiles: num('p-loaded'), deadheadMiles: num('p-deadhead'),
+        mpg: num('p-mpg'), fuelPricePerGallon: num('p-fuelPrice'),
+        factoringPercent: num('p-factoring'), tolls: num('p-tolls'),
+        driverPayPercent: num('p-driverPct'), driverPayPerMile: num('p-driverMile'), lumperCost: num('p-lumperCost')
+      });
+      return table([
+        ['Gross revenue', money(p.grossRevenue) + ' on ' + p.totalMiles + ' total miles'],
+        ['Fuel', money(p.fuelCost) + ' (' + p.gallonsUsed + ' gal)'],
+        ['Factoring', money(p.factoringCost)],
+        ['Driver pay', money(p.driverPay)],
+        ['Tolls', money(p.tolls)],
+        ['Lumper', money(p.lumperCost)],
+        ['Total costs', money(p.totalCosts)],
+        ['Net profit', money(p.netProfit) + ' (' + money(p.profitPerMile) + ' per mile, ' + p.marginPercent + '% margin)']
+      ]);
+    },
+    detention: function () {
+      var d = T.detentionCharge({
+        arrivalISO: document.getElementById('d-arrival').value.trim(),
+        departureISO: document.getElementById('d-departure').value.trim(),
+        freeHours: num('d-free'), ratePerHour: num('d-rate'),
+        graceMinutes: num('d-grace'), incrementMinutes: num('d-increment')
+      });
+      return table([
+        ['Dwell', d.dwellHours + ' h (' + d.dwellMinutes + ' min)'],
+        ['Billable', d.billableHours + ' h (' + d.billableMinutes + ' min) at ' + money(d.ratePerHour) + ' per hour'],
+        ['Amount due', money(d.amount)]
+      ]);
+    },
+    ifta: function () {
+      var milesByState = {};
+      document.getElementById('i-miles').value.split('\n').forEach(function (line) {
+        var parts = line.trim().split(/[\s,]+/).filter(Boolean);
+        if (parts.length >= 2) milesByState[parts[0].toUpperCase()] = Number(parts[1]);
+      });
+      var mpg = num('i-mpg');
+      var est = T.taxEstimate({ milesByState: milesByState, mpg: mpg });
+      var gal = T.gallonsByState({ milesByState: milesByState, mpg: mpg });
+      var rows = Object.keys(est.byState).sort().map(function (s) {
+        var b = est.byState[s];
+        return [s + ' (' + b.miles + ' mi)', b.gallons + ' gal' + (b.tax === null ? ', no rate in table' : ' at $' + b.taxRate + '/gal = ' + money(b.tax))];
+      });
+      rows.push(['Total miles', String(gal.totalMiles)]);
+      rows.push(['Total gallons', String(gal.totalGallons)]);
+      rows.push(['Estimated tax owed', money(est.totalTax)]);
+      if (est.unrated.length) rows.push(['States without a rate', est.unrated.join(', ')]);
+      return table(rows);
+    },
+    fuel: function () {
+      var f = T.planFuel({
+        totalMiles: num('f-miles'), mpg: num('f-mpg'),
+        tankCapacityGallons: num('f-tank'), startingGallons: num('f-start'),
+        fuelPricePerGallon: num('f-price'), reserveGallons: num('f-reserve')
+      });
+      return table([
+        ['Gallons needed', f.gallonsNeeded + ' gal'],
+        ['Fuel to buy', f.fuelToBuy + ' gal (after starting fuel, keeping the reserve)'],
+        ['Stops needed', String(f.stopsNeeded)],
+        ['Range on a full tank', f.rangeMilesOnFullTank + ' miles'],
+        ['Burn cost', money(f.burnCost) + ' (' + money(f.burnCostPerMile) + ' per mile)']
+      ]);
+    }
+  };
+  document.querySelectorAll('[data-run]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var name = btn.getAttribute('data-run');
+      show('res-' + name, runners[name]);
+    });
+  });
+})();
+</script>
+</body>
+</html>
